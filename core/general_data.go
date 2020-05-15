@@ -117,7 +117,6 @@ func GeneralAllBackData(fields []SqlFieldDesc) string {
 		if goType == "int" {
 			temp = "int32(" + temp + ")"
 		}
-
 		schema += "        " + util.GeneratorCamelName(v.COLUMN_NAME, 1) + ": " + temp + ","
 		schema += "\n"
 	}
