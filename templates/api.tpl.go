@@ -132,5 +132,4 @@ func (t {{UCamelTableName}}Server) View(ctx context.Context, r *commonPb.Id) (*P
 		CreatedOn: {{LCamelTableName}}.CreatedOn.Format(grpcUtil.TimeFormat),
 	}, nil
 }
-
 `
