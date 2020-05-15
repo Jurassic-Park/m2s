@@ -129,7 +129,7 @@ func (t {{UCamelTableName}}Server) View(ctx context.Context, r *commonPb.Id) (*P
 	return &Pb.{{UCamelTableName}}Entity{
 		Id:       int32({{LCamelTableName}}.Id),
 {{ApiViewBackData}}
-		CreateOn: {{LCamelTableName}}.CreatedOn.Format(grpcUtil.TimeFormat),
+		CreatedOn: {{LCamelTableName}}.CreatedOn.Format(grpcUtil.TimeFormat),
 	}, nil
 }
 
