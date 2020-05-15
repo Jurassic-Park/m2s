@@ -11,7 +11,6 @@ type {{UCamelTableName}} struct {
 	Id       int
 
 {{ServiceStructData}}
-
 	PageNum  int
 	PageSize int
 	Query    map[string]string

@@ -129,12 +129,15 @@ func GeneralAllBackData(fields []SqlFieldDesc) string {
 func GeneralViewBackData(fields []SqlFieldDesc) string {
 	schema := ""
 	for _, v := range fields {
-		// goType := util.DbTypeToGoType(v.COLUMN_TYPE)
+		goType := util.DbTypeToGoType(v.COLUMN_TYPE)
 
 		if v.COLUMN_NAME == "id" || v.COLUMN_NAME == "created_on" || v.COLUMN_NAME == "modified_on" || v.COLUMN_NAME == "deleted_on" {
 			continue
 		}
-		temp := LCamelTableName + util.GeneratorCamelName(v.COLUMN_NAME, 1)
+		temp := LCamelTableName + "." + util.GeneratorCamelName(v.COLUMN_NAME, 1)
+		if goType == "int" {
+			temp = "int32(" + temp + ")"
+		}
 
 		schema += "        " + util.GeneratorCamelName(v.COLUMN_NAME, 1) + ": " + temp + ","
 		schema += "\n"
