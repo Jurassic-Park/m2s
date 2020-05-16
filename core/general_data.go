@@ -42,7 +42,7 @@ func GeneralApiValidData(fields []SqlFieldDesc) string {
 		if v.COLUMN_NAME == "id" || v.COLUMN_NAME == "created_on" || v.COLUMN_NAME == "modified_on" || v.COLUMN_NAME == "deleted_on" {
 			continue
 		}
-		schema += "    valid.Required(r." + util.GeneratorCamelName(v.COLUMN_NAME, 1) + ", \"" + v.COLUMN_NAME + "\")"
+		schema += "    valid.Required(r." + util.GeneratorCamelName(v.COLUMN_NAME, 0) + ", \"" + v.COLUMN_NAME + "\")"
 		schema += "\n"
 	}
 
