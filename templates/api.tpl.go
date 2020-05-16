@@ -99,7 +99,7 @@ func (t {{UCamelTableName}}Server) Search(ctx context.Context, r *commonPb.Searc
 		data = append(data, &Pb.{{UCamelTableName}}Entity{
 			Id:       int32(v.Id),
 {{ApiAllBackData}}
-			CreateOn: v.CreatedOn.Format(grpcUtil.TimeFormat),
+			CreatedOn: v.CreatedOn.Format(grpcUtil.TimeFormat),
 		})
 	}
 
