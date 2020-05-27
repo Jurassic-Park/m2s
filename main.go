@@ -9,7 +9,7 @@ import (
 var (
 	sqlTable    = goopt.String([]string{"-t", "--table"}, "", "Table to build struct from")
 	connString  = goopt.String([]string{"-m", "--mysql"}, "", "mysql config")
-	serviceName = goopt.String([]string{"-pn", "--serviceName"}, "", "serviceName config")
+	serviceName = goopt.String([]string{"-n", "--serviceName"}, "", "serviceName config")
 )
 
 func init() {

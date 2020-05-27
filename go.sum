@@ -1,3 +1,5 @@
+github.com/Jurassic-Park/m2p v0.0.0-20200527115346-fcec00aa03b9 h1:0D6TD0V2YJ4YST6yB3R0J4Ypc/GdGy3A/TuHxpvHi2A=
+github.com/Jurassic-Park/m2p v0.0.0-20200527115346-fcec00aa03b9/go.mod h1:nb7qCMRoYhytAmIT+lK4upF7U104NIb1jIvJEPKwfoQ=
 github.com/droundy/goopt v0.0.0-20170604162106-0b8effe182da h1:79H+mNJWOObWrQgbkSvvZ3t/D2lKWaTi9mu/v7fNRvg=
 github.com/droundy/goopt v0.0.0-20170604162106-0b8effe182da/go.mod h1:ytRJ64WkuW4kf6/tuYqBATBCRFUP8X9+LDtgcvE+koI=
 github.com/go-sql-driver/mysql v1.5.0 h1:ozyZYNQW3x3HtqT1jira07DN2PArx2v7/mN66gGcHOs=
