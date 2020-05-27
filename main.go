@@ -7,8 +7,9 @@ import (
 )
 
 var (
-	sqlTable   = goopt.String([]string{"-t", "--table"}, "", "Table to build struct from")
-	connString = goopt.String([]string{"-m", "--mysql"}, "", "mysql config")
+	sqlTable    = goopt.String([]string{"-t", "--table"}, "", "Table to build struct from")
+	connString  = goopt.String([]string{"-m", "--mysql"}, "", "mysql config")
+	serviceName = goopt.String([]string{"-pn", "--serviceName"}, "", "serviceName config")
 )
 
 func init() {
@@ -16,7 +17,7 @@ func init() {
 		return "m2s is tool that can automaticlly generate proto file."
 	}
 	goopt.Version = "0.1"
-	goopt.Summary = `m2s --mysql user:password@tcp\(host:port\)/database\?charset=utf8 --table tableName`
+	goopt.Summary = `m2s --mysql user:password@tcp\(host:port\)/database\?charset=utf8 --table tableName --protoName`
 	goopt.Parse(nil)
 }
 
@@ -29,5 +30,9 @@ func main() {
 		fmt.Println("table can not is empty")
 		return
 	}
-	core.Generator(*connString, *sqlTable)
+	if *serviceName == "" {
+		fmt.Println("serviceName can not is empty")
+		return
+	}
+	core.Generator(*connString, *sqlTable, *serviceName)
 }

@@ -12,13 +12,15 @@ var UCamelTableName string
 var LCamelTableName string
 var fieldSlic []SqlFieldDesc
 var TableName string
+var ServiceName string
 
 // 开始生成服务文件
-func Generator(connString string, tableName string) {
+func Generator(connString string, tableName string, serviceName string) {
 	// 大驼峰表名
 	UCamelTableName = util.GeneratorCamelName(tableName, 1)
 	LCamelTableName = util.GeneratorCamelName(tableName, 0)
 	TableName = tableName
+	ServiceName = serviceName
 
 	mysql := Mysql{
 		ConnString: connString,
@@ -74,6 +76,7 @@ func GeneratorService() {
 		"{{tableName}}":         TableName,
 		"{{ServiceStructData}}": GeneralServiceStructData(fieldSlic),
 		"{{ServiceSaveData}}":   GeneralServiceSaveData(fieldSlic),
+		"{{ServiceName}}":       ServiceName,
 	}
 	//替换关键字
 	for k, v := range format {
@@ -106,6 +109,7 @@ func GeneratorApi() {
 		"{{ApiSaveData}}":     GeneralApiSaveData(fieldSlic),
 		"{{ApiAllBackData}}":  GeneralAllBackData(fieldSlic),
 		"{{ApiViewBackData}}": GeneralViewBackData(fieldSlic),
+		"{{ServiceName}}":     ServiceName,
 	}
 	//替换关键字
 	for k, v := range format {
