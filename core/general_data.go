@@ -34,12 +34,15 @@ func GeneralModelAddData(fields []SqlFieldDesc) string {
 }
 
 // valid.Required(r.Name, "name")   //不能为空
-func GeneralApiValidData(fields []SqlFieldDesc) string {
+func GeneralApiValidData(fields []SqlFieldDesc, needId bool) string {
 	schema := ""
 	for _, v := range fields {
 		// goType := util.DbTypeToGoType(v.COLUMN_TYPE)
 
-		if v.COLUMN_NAME == "id" || v.COLUMN_NAME == "created_on" || v.COLUMN_NAME == "modified_on" || v.COLUMN_NAME == "deleted_on" {
+		if v.COLUMN_NAME == "created_on" || v.COLUMN_NAME == "modified_on" || v.COLUMN_NAME == "deleted_on" {
+			continue
+		}
+		if !needId && v.COLUMN_NAME == "id" {
 			continue
 		}
 		schema += "    valid.Required(r." + util.GeneratorCamelName(v.COLUMN_NAME, 1) + ", \"" + util.GeneratorCamelName(v.COLUMN_NAME, 0) + "\")"
@@ -50,14 +53,19 @@ func GeneralApiValidData(fields []SqlFieldDesc) string {
 }
 
 // GeneralApiSaveData 组装服务时数据 		Id:       int(r.Id),
-func GeneralApiSaveData(fields []SqlFieldDesc) string {
+func GeneralApiSaveData(fields []SqlFieldDesc, needId bool) string {
 	schema := ""
 	for _, v := range fields {
 		goType := util.DbTypeToGoType(v.COLUMN_TYPE)
 
-		if v.COLUMN_NAME == "id" || v.COLUMN_NAME == "created_on" || v.COLUMN_NAME == "modified_on" || v.COLUMN_NAME == "deleted_on" {
+		if v.COLUMN_NAME == "created_on" || v.COLUMN_NAME == "modified_on" || v.COLUMN_NAME == "deleted_on" {
 			continue
 		}
+
+		if !needId && v.COLUMN_NAME == "id" {
+			continue
+		}
+
 		temp := "r." + util.GeneratorCamelName(v.COLUMN_NAME, 1)
 		if goType == "int" {
 			temp = "int(" + temp + ")"

@@ -39,13 +39,13 @@ func (t {{UCamelTableName}}Server) Add(ctx context.Context, r *Pb.{{UCamelTableN
 // Update 更新
 func (t {{UCamelTableName}}Server) Update(ctx context.Context, r *Pb.{{UCamelTableName}}Entity) (*empty.Empty, error) {
 	valid := validation.Validation{} //实例化一个验证对象
-{{ApiValidData}}
+{{ApiUpdateValidData}}
 	if valid.HasErrors() {
 		return nil, status.Errorf(codes.InvalidArgument, valid.Errors[0].Key+" "+valid.Errors[0].Message)
 	}
 
 	{{LCamelTableName}} := {{tableName}}_service.{{UCamelTableName}}{
-{{ApiSaveData}}
+{{ApiUpdateSaveData}}
 	}
 	_, err := {{LCamelTableName}}.Save()
 
