@@ -49,7 +49,7 @@ func (t {{UCamelTableName}}Server) Update(ctx context.Context, r *Pb.{{UCamelTab
 	}
 	_, err := {{LCamelTableName}}.Save()
 
-	return nil, err
+	return &empty.Empty{}, err
 }
 
 // Delete 删除
