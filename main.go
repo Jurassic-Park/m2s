@@ -23,7 +23,7 @@ func init() {
 
 func main() {
 	if *connString == "" {
-		fmt.Println("mysql connect can not is empty")
+		fmt.Println("mysql connect can not is empty!")
 		return
 	}
 	if *sqlTable == "" {

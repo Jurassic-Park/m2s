@@ -102,16 +102,16 @@ func GeneratorApi() {
 	var fileString = templates.ApiTpl
 	//整理参数
 	format := map[string]string{
-		"{{UCamelTableName}}": UCamelTableName,
-		"{{LCamelTableName}}": LCamelTableName,
-		"{{tableName}}":       TableName,
-		"{{ApiValidData}}":    GeneralApiValidData(fieldSlic, false),
-		"{{ApiSaveData}}":     GeneralApiSaveData(fieldSlic, false),
-		"{{ApiUpdateValidData}}":    GeneralApiValidData(fieldSlic, false),
-		"{{ApiUpdateSaveData}}":     GeneralApiSaveData(fieldSlic, false),
-		"{{ApiAllBackData}}":  GeneralAllBackData(fieldSlic),
-		"{{ApiViewBackData}}": GeneralViewBackData(fieldSlic),
-		"{{ServiceName}}":     ServiceName,
+		"{{UCamelTableName}}":    UCamelTableName,
+		"{{LCamelTableName}}":    LCamelTableName,
+		"{{tableName}}":          TableName,
+		"{{ApiValidData}}":       GeneralApiValidData(fieldSlic, false),
+		"{{ApiSaveData}}":        GeneralApiSaveData(fieldSlic, false),
+		"{{ApiUpdateValidData}}": GeneralApiValidData(fieldSlic, true),
+		"{{ApiUpdateSaveData}}":  GeneralApiSaveData(fieldSlic, true),
+		"{{ApiAllBackData}}":     GeneralAllBackData(fieldSlic),
+		"{{ApiViewBackData}}":    GeneralViewBackData(fieldSlic),
+		"{{ServiceName}}":        ServiceName,
 	}
 	//替换关键字
 	for k, v := range format {
