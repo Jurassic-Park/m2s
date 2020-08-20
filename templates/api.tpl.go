@@ -8,7 +8,7 @@ import (
 	"github.com/golang/protobuf/ptypes/empty"
 	commonPb "gitlab.ronshubao.com/grpc-insure-proto/common"
 	Pb "gitlab.ronshubao.com/grpc-insure-proto/{{ServiceName}}"
-	grpcUtil "gitlab.ronshubao.com/grpc-insure/grpc-util"
+	"gitlab.ronshubao.com/grpc-insure/framework"
 	"gitlab.ronshubao.com/grpc-insure/{{ServiceName}}/service/{{tableName}}_service"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/codes"
@@ -69,9 +69,9 @@ func (t {{UCamelTableName}}Server) Delete(ctx context.Context, r *commonPb.Id) (
 // Search is get all
 func (t {{UCamelTableName}}Server) Search(ctx context.Context, r *commonPb.SearchRequest) (*Pb.{{UCamelTableName}}SearchResponse, error) {
 	fmt.Println(r.Param)
-	pageNum, pageSize := grpcUtil.ParsePage(r.Param)
+	pageNum, pageSize := framework.ParsePage(r.Param)
 
-	queryParam := grpcUtil.URLQuery{QueryParam: r.Param}
+	queryParam := framework.URLQuery{QueryParam: r.Param}
 	log.Println(queryParam.ParseSingleQueryParam("name"))
 	Query := map[string]string{
 		// "name": queryParam.ParseSingleQueryParam("name"),
@@ -99,7 +99,7 @@ func (t {{UCamelTableName}}Server) Search(ctx context.Context, r *commonPb.Searc
 		data = append(data, &Pb.{{UCamelTableName}}Entity{
 			Id:       int32(v.Id),
 {{ApiAllBackData}}
-			CreatedOn: v.CreatedOn.Format(grpcUtil.TimeFormat),
+			CreatedOn: v.CreatedOn.Format(framework.TimeFormat),
 		})
 	}
 
@@ -107,7 +107,7 @@ func (t {{UCamelTableName}}Server) Search(ctx context.Context, r *commonPb.Searc
 		PageInfo: &commonPb.SearchPageResponse{
 			Page:       int32(pageNum),
 			PageSize:   int32(pageSize),
-			TotalPage:  int32(grpcUtil.GetTotalPage(total, pageSize)),
+			TotalPage:  int32(framework.GetTotalPage(total, pageSize)),
 			TotalCount: int32(total),
 		},
 		Data: data,
@@ -129,7 +129,7 @@ func (t {{UCamelTableName}}Server) View(ctx context.Context, r *commonPb.Id) (*P
 	return &Pb.{{UCamelTableName}}Entity{
 		Id:       int32({{LCamelTableName}}.Id),
 {{ApiViewBackData}}
-		CreatedOn: {{LCamelTableName}}.CreatedOn.Format(grpcUtil.TimeFormat),
+		CreatedOn: {{LCamelTableName}}.CreatedOn.Format(framework.TimeFormat),
 	}, nil
 }
 `

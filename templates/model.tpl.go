@@ -4,11 +4,12 @@ const ModelTpl = `package models
 
 import (
 	"github.com/jinzhu/gorm"
+	"gitlab.ronshubao.com/grpc-insure/framework/models"
 	"time"
 )
 
 type {{UCamelTableName}} struct {
-	Model
+	models.Model
 {{FieldStructData}}
 }
 
@@ -21,7 +22,7 @@ func (p *{{UCamelTableName}}) TableName() string {
 // Exist{{UCamelTableName}}ById checks if an {{LCamelTableName}} exists based on Id
 func Exist{{UCamelTableName}}ById(id int) (bool, error) {
 	var {{LCamelTableName}} {{UCamelTableName}}
-	err := db.Select("id").Where("id = ? AND deleted_on = ? ", id, time.Time{}).First(&{{LCamelTableName}}).Error
+	err := models.Db.Select("id").Where("id = ? AND deleted_on = ? ", id, time.Time{}).First(&{{LCamelTableName}}).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return false, err
 	}
@@ -36,7 +37,7 @@ func Exist{{UCamelTableName}}ById(id int) (bool, error) {
 // Get{{UCamelTableName}}Total gets the total number of {{LCamelTableName}}s based on the constraints
 func Get{{UCamelTableName}}Total(maps interface{}) (int, error) {
 	var count int
-	if err := db.Model(&{{UCamelTableName}}{}).Where(maps).Count(&count).Error; err != nil {
+	if err := models.Db.Model(&{{UCamelTableName}}{}).Where(maps).Count(&count).Error; err != nil {
 		return 0, err
 	}
 
@@ -46,7 +47,7 @@ func Get{{UCamelTableName}}Total(maps interface{}) (int, error) {
 // Get{{UCamelTableName}}s gets a list of {{LCamelTableName}}s based on paging constraints
 func Get{{UCamelTableName}}s(pageNum int, pageSize int, maps interface{}) ([]*{{UCamelTableName}}, error) {
 	var {{LCamelTableName}}s []*{{UCamelTableName}}
-	err := db.Where(maps).Offset(pageNum).Limit(pageSize).Find(&{{LCamelTableName}}s).Error
+	err := models.Db.Where(maps).Offset(pageNum).Limit(pageSize).Find(&{{LCamelTableName}}s).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, err
 	}
@@ -57,7 +58,7 @@ func Get{{UCamelTableName}}s(pageNum int, pageSize int, maps interface{}) ([]*{{
 // Get{{UCamelTableName}} Get a single {{LCamelTableName}} based on Id
 func Get{{UCamelTableName}}(id int) (*{{UCamelTableName}}, error) {
 	var {{LCamelTableName}} {{UCamelTableName}}
-	err := db.Where("id = ? AND deleted_on = ? ", id, time.Time{}).First(&{{LCamelTableName}}).Error
+	err := models.Db.Where("id = ? AND deleted_on = ? ", id, time.Time{}).First(&{{LCamelTableName}}).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, err
 	}
@@ -67,7 +68,7 @@ func Get{{UCamelTableName}}(id int) (*{{UCamelTableName}}, error) {
 
 // Edit{{UCamelTableName}} modify a single {{LCamelTableName}}
 func Edit{{UCamelTableName}}(id int, data interface{}) error {
-	if err := db.Model(&{{UCamelTableName}}{}).Where("id = ? AND deleted_on = ? ", id, time.Time{}).Updates(data).Error; err != nil {
+	if err := models.Db.Model(&{{UCamelTableName}}{}).Where("id = ? AND deleted_on = ? ", id, time.Time{}).Updates(data).Error; err != nil {
 		return err
 	}
 
@@ -79,7 +80,7 @@ func Add{{UCamelTableName}}(data map[string]interface{}) (int, error) {
 	{{LCamelTableName}} := {{UCamelTableName}}{
 {{ModelAddData}}
 	}
-	if err := db.Create(&{{LCamelTableName}}).Error; err != nil {
+	if err := models.Db.Create(&{{LCamelTableName}}).Error; err != nil {
 		return 0, err
 	}
 
@@ -88,7 +89,7 @@ func Add{{UCamelTableName}}(data map[string]interface{}) (int, error) {
 
 // Delete{{UCamelTableName}} delete a single {{LCamelTableName}}
 func Delete{{UCamelTableName}}(id int) error {
-	if err := db.Where("id = ?", id).Delete({{UCamelTableName}}{}).Error; err != nil {
+	if err := models.Db.Where("id = ?", id).Delete({{UCamelTableName}}{}).Error; err != nil {
 		return err
 	}
 
@@ -97,7 +98,7 @@ func Delete{{UCamelTableName}}(id int) error {
 
 // CleanAll{{UCamelTableName}} clear all {{LCamelTableName}}
 //func CleanAll{{UCamelTableName}}() error {
-//	if err := db.Unscoped().Where("deleted_on != ? ", 0).Delete(&{{UCamelTableName}}{}).Error; err != nil {
+//	if err := models.Db.Unscoped().Where("deleted_on != ? ", 0).Delete(&{{UCamelTableName}}{}).Error; err != nil {
 //		return err
 //	}
 //
