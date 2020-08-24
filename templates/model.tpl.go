@@ -36,8 +36,14 @@ func Exist{{UCamelTableName}}ById(id int) (bool, error) {
 
 // Get{{UCamelTableName}}Total gets the total number of {{LCamelTableName}}s based on the constraints
 func Get{{UCamelTableName}}Total(maps interface{}) (int, error) {
+	// get query
+	whereSql, args, err := models.AutoBuildWhere(maps)
+	if err != nil {
+		return nil, err
+	}
+
 	var count int
-	if err := models.Db.Model(&{{UCamelTableName}}{}).Where(maps).Count(&count).Error; err != nil {
+	if err := models.Db.Model(&{{UCamelTableName}}{}).Where(whereSql, args...).Count(&count).Error; err != nil {
 		return 0, err
 	}
 
@@ -46,8 +52,14 @@ func Get{{UCamelTableName}}Total(maps interface{}) (int, error) {
 
 // Get{{UCamelTableName}}s gets a list of {{LCamelTableName}}s based on paging constraints
 func Get{{UCamelTableName}}s(pageNum int, pageSize int, maps interface{}) ([]*{{UCamelTableName}}, error) {
+	// get query
+	whereSql, args, err := models.AutoBuildWhere(maps)
+	if err != nil {
+		return nil, err
+	}
+
 	var {{LCamelTableName}}s []*{{UCamelTableName}}
-	err := models.Db.Where(maps).Offset(pageNum).Limit(pageSize).Find(&{{LCamelTableName}}s).Error
+	err := models.Db.Where(whereSql, args...).Offset(pageNum).Limit(pageSize).Find(&{{LCamelTableName}}s).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, err
 	}

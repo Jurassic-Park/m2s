@@ -118,7 +118,7 @@ func GeneratorApi() {
 		fileString = strings.ReplaceAll(fileString, k, v)
 	}
 	// 当前有相同文件不更新
-	fileDir := "./api/"
+	fileDir := "./admin/"
 
 	fileName := TableName + ".go"
 	filePath := fileDir + TableName + ".go"

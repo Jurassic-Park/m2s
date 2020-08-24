@@ -75,9 +75,14 @@ func (c *{{UCamelTableName}}) Count() (int, error) {
 // getMaps ....
 func (c *{{UCamelTableName}}) getMaps() map[string]interface{} {
 	maps := make(map[string]interface{})
-	if c.Query["name"] != "" {
-		// maps["name"] = c.Query["name"]
+
+	// 传递到下一层
+	for k, v := range c.Query{
+		if v != "" {
+			maps[k] = v
+		}
 	}
+
 	maps["deleted_on"] = time.Time{}
 	return maps
 }
