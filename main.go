@@ -22,6 +22,7 @@ func init() {
 }
 
 func main() {
+	fmt.Println("v1.0.1")
 	if *connString == "" {
 		fmt.Println("mysql connect can not is empty!")
 		return
