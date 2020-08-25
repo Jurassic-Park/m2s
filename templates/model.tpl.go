@@ -39,7 +39,7 @@ func Get{{UCamelTableName}}Total(maps interface{}) (int, error) {
 	// get query
 	whereSql, args, err := models.AutoBuildWhere(maps)
 	if err != nil {
-		return nil, err
+		return 0, err
 	}
 
 	var count int
@@ -59,7 +59,7 @@ func Get{{UCamelTableName}}s(pageNum int, pageSize int, maps interface{}) ([]*{{
 	}
 
 	var {{LCamelTableName}}s []*{{UCamelTableName}}
-	err := models.Db.Where(whereSql, args...).Offset(pageNum).Limit(pageSize).Find(&{{LCamelTableName}}s).Error
+	err = models.Db.Where(whereSql, args...).Offset(pageNum).Limit(pageSize).Find(&{{LCamelTableName}}s).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, err
 	}

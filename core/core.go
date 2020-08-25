@@ -5,6 +5,7 @@ import (
 	"github.com/Jurassic-Park/m2s/templates"
 	"github.com/Jurassic-Park/m2s/util"
 	_ "github.com/go-sql-driver/mysql"
+	"os"
 	"strings"
 )
 
@@ -99,7 +100,10 @@ func GeneratorService() {
 // 生成api
 func GeneratorApi() {
 	fmt.Println("------开始生成API数据------")
-	var fileString = templates.ApiTpl
+	var apiString = templates.ApiTpl
+	var partnerString = templates.PartnerTpl
+	var adminString = templates.AdminTpl
+
 	//整理参数
 	format := map[string]string{
 		"{{UCamelTableName}}":    UCamelTableName,
@@ -115,17 +119,72 @@ func GeneratorApi() {
 	}
 	//替换关键字
 	for k, v := range format {
-		fileString = strings.ReplaceAll(fileString, k, v)
+		apiString = strings.ReplaceAll(apiString, k, v)
+		partnerString = strings.ReplaceAll(partnerString, k, v)
+		adminString = strings.ReplaceAll(adminString, k, v)
 	}
-	// 当前有相同文件不更新
-	fileDir := "./admin/"
 
-	fileName := TableName + ".go"
-	filePath := fileDir + TableName + ".go"
-	if ok, err := util.PathExists(filePath); err == nil && ok {
-		fmt.Println("目录下存在相同文件:" + filePath)
+	// 检查routers文件夹
+	routersPath := "./routers"
+	if ok, err := util.PathExists(routersPath); err != nil || !ok {
+		fmt.Println("dir not exist:" + routersPath)
 		return
 	}
-	util.WriteFile(fileDir, fileName, fileString, 0755)
+	// 检查是否有 admin  partner api
+	adminPath := routersPath + "/admin"
+	partnerPath := routersPath + "/partner"
+	apiPath := routersPath + "/api"
+	if ok, err := util.PathExists(adminPath); err != nil && !ok {
+		// 新建
+		err := os.Mkdir(adminPath, os.ModePerm)
+		if err != nil {
+			fmt.Printf("mkdir failed (%s)![%v]\n", adminPath, err)
+			return
+		}
+		fmt.Printf("mkdir " + adminPath + " success!\n")
+	}
+	if ok, err := util.PathExists(partnerPath); err != nil && !ok {
+		// 新建
+		err := os.Mkdir(partnerPath, os.ModePerm)
+		if err != nil {
+			fmt.Printf("mkdir failed (%s)![%v]\n", partnerPath, err)
+			return
+		}
+		fmt.Printf("mkdir " + partnerPath + " success!\n")
+	}
+	if ok, err := util.PathExists(apiPath); err != nil && !ok {
+		// 新建
+		err := os.Mkdir(apiPath, os.ModePerm)
+		if err != nil {
+			fmt.Printf("mkdir failed (%s)![%v]\n", apiPath, err)
+			return
+		}
+		fmt.Printf("mkdir " + apiPath + " success!\n")
+	}
+
+	// 生成三个相同的api接口
+
+	// 当前有相同文件不更新
+	fileName := TableName + ".go"
+
+	apiFilePath := apiPath + "/" + fileName
+	partnerFilePath := partnerPath + "/" + fileName
+	adminFilePath := adminPath + "/" + fileName
+
+	if ok, err := util.PathExists(apiFilePath); err == nil && ok {
+		fmt.Println("目录下存在相同文件:" + apiFilePath)
+	} else {
+		util.WriteFile(apiPath, fileName, apiString, 0755)
+	}
+	if ok, err := util.PathExists(partnerFilePath); err == nil && ok {
+		fmt.Println("目录下存在相同文件:" + partnerFilePath)
+	} else {
+		util.WriteFile(partnerPath, fileName, partnerString, 0755)
+	}
+	if ok, err := util.PathExists(adminFilePath); err == nil && ok {
+		fmt.Println("目录下存在相同文件:" + adminFilePath)
+	} else {
+		util.WriteFile(adminPath, fileName, adminString, 0755)
+	}
 	fmt.Println("------生成API成功-----")
 }
