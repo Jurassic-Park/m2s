@@ -132,6 +132,8 @@ func (t {{UCamelTableName}}Server) View(ctx context.Context, r *commonPb.Id) (*P
 		CreatedOn: {{LCamelTableName}}.CreatedOn.Format(framework.TimeFormat),
 	}, nil
 }
+
+func (t {{UCamelTableName}}Server) UserAuthFuncOverride() {}
 `
 
 const PartnerTpl = `package partner
@@ -141,7 +143,7 @@ import (
 	"github.com/astaxie/beego/validation"
 	"github.com/golang/protobuf/ptypes/empty"
 	commonPb "gitlab.ronshubao.com/grpc-insure-proto/common"
-	Pb "gitlab.ronshubao.com/grpc-insure-proto/{{ServiceName}}"
+	Pb "gitlab.ronshubao.com/grpc-insure-proto/{{ServiceName}}_partner"
 	"gitlab.ronshubao.com/grpc-insure/framework"
 	"gitlab.ronshubao.com/grpc-insure/{{ServiceName}}/service/{{tableName}}_service"
 	"golang.org/x/net/context"
@@ -266,6 +268,8 @@ func (t {{UCamelTableName}}Server) View(ctx context.Context, r *commonPb.Id) (*P
 		CreatedOn: {{LCamelTableName}}.CreatedOn.Format(framework.TimeFormat),
 	}, nil
 }
+
+func (t {{UCamelTableName}}Server) PartnerAuthFuncOverride() {}
 `
 
 const AdminTpl = `package admin
@@ -275,7 +279,7 @@ import (
 	"github.com/astaxie/beego/validation"
 	"github.com/golang/protobuf/ptypes/empty"
 	commonPb "gitlab.ronshubao.com/grpc-insure-proto/common"
-	Pb "gitlab.ronshubao.com/grpc-insure-proto/{{ServiceName}}"
+	Pb "gitlab.ronshubao.com/grpc-insure-proto/{{ServiceName}}_admin"
 	"gitlab.ronshubao.com/grpc-insure/framework"
 	"gitlab.ronshubao.com/grpc-insure/{{ServiceName}}/service/{{tableName}}_service"
 	"golang.org/x/net/context"
@@ -400,4 +404,6 @@ func (t {{UCamelTableName}}Server) View(ctx context.Context, r *commonPb.Id) (*P
 		CreatedOn: {{LCamelTableName}}.CreatedOn.Format(framework.TimeFormat),
 	}, nil
 }
+
+func (t {{UCamelTableName}}Server) AdminAuthFuncOverride() {}
 `
