@@ -78,6 +78,22 @@ func Get{{UCamelTableName}}(id int) (*{{UCamelTableName}}, error) {
 	return &{{LCamelTableName}}, nil
 }
 
+// Get{{UCamelTableName}} Get a single {{LCamelTableName}} based on maps
+func Get{{UCamelTableName}}Info(maps interface{}) (*{{UCamelTableName}}, error) {
+	whereSql, args, err := models.AutoBuildWhere(maps)
+	if err != nil {
+		return nil, err
+	}
+
+	var {{LCamelTableName}} {{UCamelTableName}}
+	err = models.Db.Where(whereSql, args...).First(&{{LCamelTableName}}).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+
+	return &{{LCamelTableName}}, nil
+}
+
 // Edit{{UCamelTableName}} modify a single {{LCamelTableName}}
 func Edit{{UCamelTableName}}(id int, data interface{}) error {
 	if err := models.Db.Model(&{{UCamelTableName}}{}).Where("id = ? AND deleted_on = ? ", id, time.Time{}).Updates(data).Error; err != nil {

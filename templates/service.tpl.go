@@ -41,6 +41,11 @@ func (c *{{UCamelTableName}}) Get() (*models.{{UCamelTableName}}, error) {
 	return models.Get{{UCamelTableName}}(c.Id)
 }
 
+// GetInfo
+func (c *{{UCamelTableName}}) GetInfo() (*models.{{UCamelTableName}}, error) {
+	return models.Get{{UCamelTableName}}Info(c.getMaps())
+}
+
 // GetAll ...
 func (c *{{UCamelTableName}}) GetAll() ([]*models.{{UCamelTableName}}, error) {
 	var (
