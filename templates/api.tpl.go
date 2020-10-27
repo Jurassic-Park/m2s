@@ -57,7 +57,7 @@ func (t {{UCamelTableName}}Server) Search(ctx context.Context, r *commonPb.Searc
 
 	queryParam := framework.URLQuery{QueryParam: r.Param}
 	log.Println(queryParam.ParseSingleQueryParam("name"))
-	Query := map[string]string{
+	Query := map[string]interface{}{
 		// "name": queryParam.ParseSingleQueryParam("name"),
 	}
 
@@ -177,7 +177,7 @@ func (t {{UCamelTableName}}Server) Search(ctx context.Context, r *commonPb.Searc
 
 	queryParam := framework.URLQuery{QueryParam: r.Param}
 	log.Println(queryParam.ParseSingleQueryParam("name"))
-	Query := map[string]string{
+	Query := map[string]interface{}{
 		// "name": queryParam.ParseSingleQueryParam("name"),
 	}
 
@@ -297,7 +297,7 @@ func (t {{UCamelTableName}}Server) Search(ctx context.Context, r *commonPb.Searc
 
 	queryParam := framework.URLQuery{QueryParam: r.Param}
 	log.Println(queryParam.ParseSingleQueryParam("name"))
-	Query := map[string]string{
+	Query := map[string]interface{}{
 		// "name": queryParam.ParseSingleQueryParam("name"),
 	}
 

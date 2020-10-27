@@ -13,7 +13,7 @@ type {{UCamelTableName}} struct {
 {{ServiceStructData}}
 	PageNum  int
 	PageSize int
-	Query    map[string]string
+	Query    map[string]interface{}
 }
 
 // 保存
@@ -83,9 +83,7 @@ func (c *{{UCamelTableName}}) getMaps() map[string]interface{} {
 
 	// 传递到下一层
 	for k, v := range c.Query{
-		if v != "" {
-			maps[k] = v
-		}
+		maps[k] = v
 	}
 
 	maps["deleted_on"] = time.Time{}
