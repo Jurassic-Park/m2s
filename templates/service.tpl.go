@@ -3,7 +3,7 @@ package templates
 var ServiceTpl = `package {{tableName}}_service
 
 import (
-	"gitlab.ronshubao.com/grpc-insure/{{ServiceName}}/models"
+	"zhiyong/insure/{{ServiceName}}/models"
 	"time"
 )
 

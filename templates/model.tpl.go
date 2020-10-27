@@ -4,7 +4,7 @@ const ModelTpl = `package models
 
 import (
 	"github.com/jinzhu/gorm"
-	"gitlab.ronshubao.com/grpc-insure/framework/models"
+	"zhiyong/insure/framework/models"
 	"time"
 )
 
