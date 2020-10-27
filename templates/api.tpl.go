@@ -19,7 +19,7 @@ import (
 type {{UCamelTableName}}Server struct{}
 
 // Save 添加/更新
-func (t {{UCamelTableName}}Server) Add(ctx context.Context, r *Pb.{{UCamelTableName}}Entity) (*commonPb.Id, error) {
+func (t {{UCamelTableName}}Server) Save(ctx context.Context, r *Pb.{{UCamelTableName}}Entity) (*commonPb.Id, error) {
 	valid := validation.Validation{} //实例化一个验证对象
 {{ApiValidData}}
 	if valid.HasErrors() {
@@ -138,8 +138,8 @@ import (
 
 type {{UCamelTableName}}Server struct{}
 
-// Add 添加
-func (t {{UCamelTableName}}Server) Add(ctx context.Context, r *Pb.{{UCamelTableName}}Entity) (*commonPb.Id, error) {
+// save
+func (t {{UCamelTableName}}Server) Save(ctx context.Context, r *Pb.{{UCamelTableName}}Entity) (*commonPb.Id, error) {
 	valid := validation.Validation{} //实例化一个验证对象
 {{ApiValidData}}
 	if valid.HasErrors() {
@@ -154,22 +154,6 @@ func (t {{UCamelTableName}}Server) Add(ctx context.Context, r *Pb.{{UCamelTableN
 	return &commonPb.Id{
 		Id: int64(Id),
 	}, err
-}
-
-// Update 更新
-func (t {{UCamelTableName}}Server) Update(ctx context.Context, r *Pb.{{UCamelTableName}}Entity) (*empty.Empty, error) {
-	valid := validation.Validation{} //实例化一个验证对象
-{{ApiUpdateValidData}}
-	if valid.HasErrors() {
-		return nil, status.Errorf(codes.InvalidArgument, valid.Errors[0].Key+" "+valid.Errors[0].Message)
-	}
-
-	{{LCamelTableName}} := {{tableName}}_service.{{UCamelTableName}}{
-{{ApiUpdateSaveData}}
-	}
-	_, err := {{LCamelTableName}}.Save()
-
-	return &empty.Empty{}, err
 }
 
 // Delete 删除
@@ -274,8 +258,8 @@ import (
 
 type {{UCamelTableName}}Server struct{}
 
-// Add 添加
-func (t {{UCamelTableName}}Server) Add(ctx context.Context, r *Pb.{{UCamelTableName}}Entity) (*commonPb.Id, error) {
+// Save
+func (t {{UCamelTableName}}Server) Save(ctx context.Context, r *Pb.{{UCamelTableName}}Entity) (*commonPb.Id, error) {
 	valid := validation.Validation{} //实例化一个验证对象
 {{ApiValidData}}
 	if valid.HasErrors() {
@@ -290,22 +274,6 @@ func (t {{UCamelTableName}}Server) Add(ctx context.Context, r *Pb.{{UCamelTableN
 	return &commonPb.Id{
 		Id: int64(Id),
 	}, err
-}
-
-// Update 更新
-func (t {{UCamelTableName}}Server) Update(ctx context.Context, r *Pb.{{UCamelTableName}}Entity) (*empty.Empty, error) {
-	valid := validation.Validation{} //实例化一个验证对象
-{{ApiUpdateValidData}}
-	if valid.HasErrors() {
-		return nil, status.Errorf(codes.InvalidArgument, valid.Errors[0].Key+" "+valid.Errors[0].Message)
-	}
-
-	{{LCamelTableName}} := {{tableName}}_service.{{UCamelTableName}}{
-{{ApiUpdateSaveData}}
-	}
-	_, err := {{LCamelTableName}}.Save()
-
-	return &empty.Empty{}, err
 }
 
 // Delete 删除
