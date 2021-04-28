@@ -62,7 +62,7 @@ func GeneralApiSaveData(fields []SqlFieldDesc, needId bool) string {
 			continue
 		}
 
-		if !needId && v.COLUMN_NAME == "id" {
+		if v.COLUMN_NAME == "id" && !needId {
 			continue
 		}
 
@@ -106,6 +106,27 @@ func GeneralServiceSaveData(fields []SqlFieldDesc) string {
 		}
 
 		schema += "        \"" + v.COLUMN_NAME + "\": c." + util.GeneratorCamelName(v.COLUMN_NAME, 1) + ","
+		schema += "\n"
+	}
+
+	return schema
+}
+
+// 组装服务中的add 数据
+func GeneralServiceSaveAddData(fields []SqlFieldDesc) string {
+	schema := ""
+	for _, v := range fields {
+
+		if v.COLUMN_NAME == "created_on" || v.COLUMN_NAME == "modified_on" || v.COLUMN_NAME == "deleted_on" {
+			continue
+		}
+
+		if v.COLUMN_NAME == "id" {
+			continue
+		}
+
+		schema += "        " + util.GeneratorCamelName(v.COLUMN_NAME, 1) + ": c." +
+			util.GeneratorCamelName(v.COLUMN_NAME, 1) + ","
 		schema += "\n"
 	}
 

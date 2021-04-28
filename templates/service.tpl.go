@@ -3,24 +3,20 @@ package templates
 var ServiceTpl = `package {{tableName}}_service
 
 import (
+	models2 "zhiyong/insure/framework/models"
 	"zhiyong/insure/{{ServiceName}}/models"
-	"time"
 )
 
 type {{UCamelTableName}} struct {
 	Id       int
 
 {{ServiceStructData}}
-	PageNum  int
-	PageSize int
-	Query    map[string]interface{}
+
+	models2.TableSearch
 }
 
 // 保存
 func (c *{{UCamelTableName}}) Save() (int, error) {
-	data := map[string]interface{}{
-{{ServiceSaveData}}
-	}
 
 	ok, err := c.ExistById()
 	if err != nil {
@@ -29,22 +25,24 @@ func (c *{{UCamelTableName}}) Save() (int, error) {
 
 	if ok {
 		// 更新
+		data := map[string]interface{}{
+			{{ServiceSaveData}}
+		}
 		err := models.Edit{{UCamelTableName}}(c.Id, data)
 		return c.Id, err
 	}
 
+	data := models.{{UCamelTableName}}{
+    	{{ServiceSaveAddData}}
+	}
 	return models.Add{{UCamelTableName}}(data)
 }
 
 // Get ...
 func (c *{{UCamelTableName}}) Get() (*models.{{UCamelTableName}}, error) {
-	return models.Get{{UCamelTableName}}(c.Id)
+	return models.Get{{UCamelTableName}}(c.TableSearch)
 }
 
-// GetInfo
-func (c *{{UCamelTableName}}) GetInfo() (*models.{{UCamelTableName}}, error) {
-	return models.Get{{UCamelTableName}}Info(c.getMaps())
-}
 
 // GetAll ...
 func (c *{{UCamelTableName}}) GetAll() ([]*models.{{UCamelTableName}}, error) {
@@ -54,7 +52,7 @@ func (c *{{UCamelTableName}}) GetAll() ([]*models.{{UCamelTableName}}, error) {
 
 	// 缓存
 
-	list, err := models.Get{{UCamelTableName}}s(c.PageNum, c.PageSize, c.getMaps())
+	list, err := models.Get{{UCamelTableName}}s(c.TableSearch)
 	if err != nil {
 		return nil, err
 	}
@@ -64,29 +62,16 @@ func (c *{{UCamelTableName}}) GetAll() ([]*models.{{UCamelTableName}}, error) {
 
 // 删除
 func (c *{{UCamelTableName}}) Delete() error {
-	return models.Delete{{UCamelTableName}}(c.Id)
+	return models.Delete{{UCamelTableName}}(c.TableSearch)
 }
 
 // ExistById ...
 func (c *{{UCamelTableName}}) ExistById() (bool, error) {
-	return models.Exist{{UCamelTableName}}ById(c.Id)
+	return models.Exist{{UCamelTableName}}ById(c.Id, false)
 }
 
 // Count ...
 func (c *{{UCamelTableName}}) Count() (int, error) {
-	return models.Get{{UCamelTableName}}Total(c.getMaps())
-}
-
-// getMaps ....
-func (c *{{UCamelTableName}}) getMaps() map[string]interface{} {
-	maps := make(map[string]interface{})
-
-	// 传递到下一层
-	for k, v := range c.Query{
-		maps[k] = v
-	}
-
-	maps["deleted_on"] = time.Time{}
-	return maps
+	return models.Get{{UCamelTableName}}Total(c.TableSearch)
 }
 `

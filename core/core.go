@@ -72,12 +72,13 @@ func GeneratorService() {
 	var fileString = templates.ServiceTpl
 	//整理参数
 	format := map[string]string{
-		"{{UCamelTableName}}":   UCamelTableName,
-		"{{LCamelTableName}}":   LCamelTableName,
-		"{{tableName}}":         TableName,
-		"{{ServiceStructData}}": GeneralServiceStructData(fieldSlic),
-		"{{ServiceSaveData}}":   GeneralServiceSaveData(fieldSlic),
-		"{{ServiceName}}":       ServiceName,
+		"{{UCamelTableName}}":    UCamelTableName,
+		"{{LCamelTableName}}":    LCamelTableName,
+		"{{tableName}}":          TableName,
+		"{{ServiceStructData}}":  GeneralServiceStructData(fieldSlic),
+		"{{ServiceSaveData}}":    GeneralServiceSaveData(fieldSlic),
+		"{{ServiceSaveAddData}}": GeneralServiceSaveAddData(fieldSlic),
+		"{{ServiceName}}":        ServiceName,
 	}
 	//替换关键字
 	for k, v := range format {
@@ -110,7 +111,7 @@ func GeneratorApi() {
 		"{{LCamelTableName}}":    LCamelTableName,
 		"{{tableName}}":          TableName,
 		"{{ApiValidData}}":       GeneralApiValidData(fieldSlic, false),
-		"{{ApiSaveData}}":        GeneralApiSaveData(fieldSlic, false),
+		"{{ApiSaveData}}":        GeneralApiSaveData(fieldSlic, true),
 		"{{ApiUpdateValidData}}": GeneralApiValidData(fieldSlic, true),
 		"{{ApiUpdateSaveData}}":  GeneralApiSaveData(fieldSlic, true),
 		"{{ApiAllBackData}}":     GeneralAllBackData(fieldSlic),
