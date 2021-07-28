@@ -3,12 +3,14 @@ package templates
 const ModelTpl = `package models
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"github.com/jinzhu/gorm"
 	"time"
-	"zhiyong/insure/framework/cache"
-	log "zhiyong/insure/framework/glog"
-	"zhiyong/insure/framework/models"
+	"zhiyong/insure/framework/src/cache"
+	log "zhiyong/insure/framework/src/glog"
+	"zhiyong/insure/framework/src/models"
 )
 
 type {{UCamelTableName}} struct {
@@ -24,7 +26,7 @@ func (p *{{UCamelTableName}}) TableName() string {
 const {{LCamelTableName}}CachePrefix = "{{LCamelTableName}}"
 
 // Exist{{UCamelTableName}}ById checks if an {{LCamelTableName}} exists based on Id
-func Exist{{UCamelTableName}}ById(id int, unscoped bool) (bool, error) {
+func Exist{{UCamelTableName}}ById(ctx context.Context, id int, unscoped bool) (bool, error) {
 	var {{LCamelTableName}} {{UCamelTableName}}
 
 	cacheKey := {{LCamelTableName}}CachePrefix + fmt.Sprintf(":Exist{{UCamelTableName}}ById-%v", unscoped)
@@ -33,12 +35,12 @@ func Exist{{UCamelTableName}}ById(id int, unscoped bool) (bool, error) {
 	var err error
 	if cc, err = cache.NewCache(cacheKey, id).GetRedisCache(&{{LCamelTableName}}); err == nil {
 		if {{LCamelTableName}}.Id > 0 {
-			log.Info("--命中cache--")
+			log.InfoWithCtx(ctx,"--命中cache--")
 			return true, nil
 		}
 	}
 
-	db := models.Db.Select("id")
+	db := models.GetDb(ctx).Select("id")
 	if !unscoped {
 		db = db.Where("id = ? AND deleted_on = ? ", id, time.Time{})
 	} else {
@@ -57,7 +59,7 @@ func Exist{{UCamelTableName}}ById(id int, unscoped bool) (bool, error) {
 }
 
 // Get{{UCamelTableName}}Total gets the total number of {{LCamelTableName}}s based on the constraints
-func Get{{UCamelTableName}}Total(maps models.TableSearch) (int, error) {
+func Get{{UCamelTableName}}Total(ctx context.Context, maps models.TableSearch) (int, error) {
 	var count int
 	cacheKey := {{LCamelTableName}}CachePrefix + ":Get{{UCamelTableName}}Total"
 	var cc cache.Cache
@@ -66,7 +68,7 @@ func Get{{UCamelTableName}}Total(maps models.TableSearch) (int, error) {
 		return count, nil
 	}
 
-	db := models.SearchConditionBuild(maps)
+	db := models.SearchConditionBuild(ctx, maps)
 	if err := db.Model(&{{UCamelTableName}}{}).Count(&count).Error; err != nil {
 		return 0, err
 	}
@@ -75,19 +77,19 @@ func Get{{UCamelTableName}}Total(maps models.TableSearch) (int, error) {
 }
 
 // Get{{UCamelTableName}}s gets a list of {{LCamelTableName}}s based on paging constraints
-func Get{{UCamelTableName}}s(search models.TableSearch) ([]*{{UCamelTableName}}, error) {
+func Get{{UCamelTableName}}s(ctx context.Context, search models.TableSearch) ([]*{{UCamelTableName}}, error) {
 	var {{LCamelTableName}}s []*{{UCamelTableName}}
 	cacheKey := {{LCamelTableName}}CachePrefix + ":Get{{UCamelTableName}}s"
 
 	var cc cache.Cache
 	var err error
 	if cc, err = cache.NewCache(cacheKey, search).GetRedisCache(&{{LCamelTableName}}s); err == nil {
-		log.Info("--命中cache--")
+		log.InfoWithCtx(ctx,"--命中cache--")
 		return {{LCamelTableName}}s, err
 	}
 
 	// get query
-	db, err := models.SearchBuild(search)
+	db, err := models.SearchBuild(ctx, search)
 	if err != nil {
 		return nil, err
 	}
@@ -101,17 +103,17 @@ func Get{{UCamelTableName}}s(search models.TableSearch) ([]*{{UCamelTableName}},
 }
 
 // Get{{UCamelTableName}} Get a single {{LCamelTableName}} based on Id
-func Get{{UCamelTableName}}(search models.TableSearch) (*{{UCamelTableName}}, error) {
+func Get{{UCamelTableName}}(ctx context.Context, search models.TableSearch) (*{{UCamelTableName}}, error) {
 	var {{LCamelTableName}} {{UCamelTableName}}
 	cacheKey := {{LCamelTableName}}CachePrefix + ":Get{{UCamelTableName}}"
 
 	var cc cache.Cache
 	var err error
 	if cc, err = cache.NewCache(cacheKey, search).GetRedisCache(&{{LCamelTableName}}); err == nil {
-		log.Info("--命中cache--")
+		log.InfoWithCtx(ctx,"--命中cache--")
 		return &{{LCamelTableName}}, err
 	}
-	db, err := models.SearchBuild(search)
+	db, err := models.SearchBuild(ctx, search)
 	if err != nil {
 		return nil, err
 	}
@@ -125,8 +127,8 @@ func Get{{UCamelTableName}}(search models.TableSearch) (*{{UCamelTableName}}, er
 }
 
 // Edit{{UCamelTableName}} modify a single {{LCamelTableName}}
-func Edit{{UCamelTableName}}(id int, data interface{}) error {
-	if err := models.Db.Model(&{{UCamelTableName}}{}).Where("id = ? AND deleted_on = ? ", id, time.Time{}).Updates(data).Error; err != nil {
+func Edit{{UCamelTableName}}(ctx context.Context, id int, data interface{}) error {
+	if err := models.GetDb(ctx).Model(&{{UCamelTableName}}{}).Where("id = ? AND deleted_on = ? ", id, time.Time{}).Updates(data).Error; err != nil {
 		return err
 	}
 
@@ -135,8 +137,8 @@ func Edit{{UCamelTableName}}(id int, data interface{}) error {
 }
 
 // Add{{UCamelTableName}} add a single {{LCamelTableName}}
-func Add{{UCamelTableName}}({{LCamelTableName}} {{UCamelTableName}}) (int, error) {
-	if err := models.Db.Create(&{{LCamelTableName}}).Error; err != nil {
+func Add{{UCamelTableName}}(ctx context.Context, {{LCamelTableName}} {{UCamelTableName}}) (int, error) {
+	if err := models.GetDb(ctx).Create(&{{LCamelTableName}}).Error; err != nil {
 		return 0, err
 	}
 
@@ -145,11 +147,11 @@ func Add{{UCamelTableName}}({{LCamelTableName}} {{UCamelTableName}}) (int, error
 }
 
 // Delete{{UCamelTableName}} delete a single {{LCamelTableName}}
-func Delete{{UCamelTableName}}(search models.TableSearch) error {
+func Delete{{UCamelTableName}}(ctx context.Context, search models.TableSearch) error {
 	if len(search.WhereMaps) == 0 {
 		return errors.New("删除异常[999]")
 	}
-	db := models.SearchConditionBuild(search)
+	db := models.SearchConditionBuild(ctx, search)
 	if err := db.Delete({{UCamelTableName}}{}).Error; err != nil {
 		return err
 	}

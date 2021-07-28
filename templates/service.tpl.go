@@ -3,13 +3,15 @@ package templates
 var ServiceTpl = `package {{tableName}}_service
 
 import (
+	"context"
 	models2 "zhiyong/insure/framework/models"
 	"zhiyong/insure/{{ServiceName}}/models"
 )
 
 type {{UCamelTableName}} struct {
-	Id       int
+	Ctx context.Context
 
+	Id       int
 {{ServiceStructData}}
 
 	models2.TableSearch
@@ -26,21 +28,21 @@ func (c *{{UCamelTableName}}) Save() (int, error) {
 	if ok {
 		// 更新
 		data := map[string]interface{}{
-			{{ServiceSaveData}}
+				{{ServiceSaveData}}
 		}
-		err := models.Edit{{UCamelTableName}}(c.Id, data)
+		err := models.Edit{{UCamelTableName}}(c.Ctx, c.Id, data)
 		return c.Id, err
 	}
 
 	data := models.{{UCamelTableName}}{
-    	{{ServiceSaveAddData}}
+    		{{ServiceSaveAddData}}
 	}
-	return models.Add{{UCamelTableName}}(data)
+	return models.Add{{UCamelTableName}}(c.Ctx, data)
 }
 
 // Get ...
 func (c *{{UCamelTableName}}) Get() (*models.{{UCamelTableName}}, error) {
-	return models.Get{{UCamelTableName}}(c.TableSearch)
+	return models.Get{{UCamelTableName}}(c.Ctx, c.TableSearch)
 }
 
 
@@ -52,7 +54,7 @@ func (c *{{UCamelTableName}}) GetAll() ([]*models.{{UCamelTableName}}, error) {
 
 	// 缓存
 
-	list, err := models.Get{{UCamelTableName}}s(c.TableSearch)
+	list, err := models.Get{{UCamelTableName}}s(c.Ctx, c.TableSearch)
 	if err != nil {
 		return nil, err
 	}
@@ -62,16 +64,19 @@ func (c *{{UCamelTableName}}) GetAll() ([]*models.{{UCamelTableName}}, error) {
 
 // 删除
 func (c *{{UCamelTableName}}) Delete() error {
-	return models.Delete{{UCamelTableName}}(c.TableSearch)
+	return models.Delete{{UCamelTableName}}(c.Ctx, c.TableSearch)
 }
 
 // ExistById ...
-func (c *{{UCamelTableName}}) ExistById() (bool, error) {
-	return models.Exist{{UCamelTableName}}ById(c.Id, false)
+func (c *{{UCamelTableName}}) ExistById() (bool, error) {	
+	if c.Id == 0 {
+		return false, nil    
+	}
+	return models.Exist{{UCamelTableName}}ById(c.Ctx, c.Id, false)
 }
 
 // Count ...
 func (c *{{UCamelTableName}}) Count() (int, error) {
-	return models.Get{{UCamelTableName}}Total(c.TableSearch)
+	return models.Get{{UCamelTableName}}Total(c.Ctx, c.TableSearch)
 }
 `
